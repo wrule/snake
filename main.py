@@ -5,7 +5,7 @@ from random import random
 
 WIDTH = 30
 HEIGHT = 13
-DIR_DICT = { 'w': 'UP', 's': 'DOWN', 'a': 'LEFT', 'd': 'RIGHT' }
+DIR_DICT = { 'w': 'Y_UP', 's': 'Y_DOWN', 'a': 'X_LEFT', 'd': 'X_RIGHT' }
 
 def initGameMap(snake):
   gameMap = [];
@@ -76,16 +76,16 @@ def snakeMove(
   head = snake[0]
   targetX = 0
   targetY = 0
-  if direction == 'UP':
+  if direction == 'Y_UP':
     targetY = head['y'] - 1
     targetX = head['x']
-  elif direction == 'DOWN':
+  elif direction == 'Y_DOWN':
     targetY = head['y'] + 1
     targetX = head['x']
-  elif direction == 'LEFT':
+  elif direction == 'X_LEFT':
     targetY = head['y']
     targetX = head['x'] - 1
-  elif direction == 'RIGHT':
+  elif direction == 'X_RIGHT':
     targetY = head['y']
     targetX = head['x'] + 1
   if xyIsInBody(targetX, targetY, snake):
@@ -123,7 +123,7 @@ def render(
     y += 1
 
 def main():
-  direction = 'UP'
+  direction = 'Y_UP'
   status = '平安'
   snake = initSnake()
   gameMap = initGameMap(snake)
@@ -132,7 +132,9 @@ def main():
     render(gameMap, snake)
     keyCode = input('请输入（w上，s下，a左，d右，enter继续，exit退出）：')
     if keyCode in DIR_DICT.keys():
-      direction = DIR_DICT[keyCode]
+      newDirection = DIR_DICT[keyCode]
+      if direction[0:2] != newDirection[0:2]:
+        direction = newDirection
     elif keyCode == 'exit':
       status = '用户退出'
       break
