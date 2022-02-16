@@ -1,11 +1,10 @@
-#!/opt/homebrew/bin/python3
-
 import os
+import time
 from random import random
+import keyboard
 
 WIDTH = 30
 HEIGHT = 13
-DIR_DICT = { 'w': 'Y_UP', 's': 'Y_DOWN', 'a': 'X_LEFT', 'd': 'X_RIGHT' }
 
 def initGameMap(snake):
   gameMap = [];
@@ -113,7 +112,7 @@ def render(
         rowStr += '●'
       else:
         if land == 0:
-          rowStr += ' '
+          rowStr += '  '
         elif land == 1:
           rowStr += '■'
         elif land == 2:
@@ -127,20 +126,28 @@ def main():
   status = '平安'
   snake = initSnake()
   gameMap = initGameMap(snake)
+
+  def setDir(dir):
+    nonlocal direction
+    if direction[0:2] != dir[0:2]:
+      direction = dir
+
+  keyboard.add_hotkey('up', lambda: setDir('Y_UP'))
+  keyboard.add_hotkey('down', lambda: setDir('Y_DOWN'))
+  keyboard.add_hotkey('left', lambda: setDir('X_LEFT'))
+  keyboard.add_hotkey('right', lambda: setDir('X_RIGHT'))
+  
+  print('贪吃蛇，上下左右键控制方向')
+  time.sleep(2)
+  
   while True:
-    os.system('clear')
+    os.system('cls')
     render(gameMap, snake)
-    keyCode = input('请输入（w上，s下，a左，d右，enter继续，exit退出）：')
-    if keyCode in DIR_DICT.keys():
-      newDirection = DIR_DICT[keyCode]
-      if direction[0:2] != newDirection[0:2]:
-        direction = newDirection
-    elif keyCode == 'exit':
-      status = '用户退出'
-      break
+    time.sleep(0.4)
     status = snakeMove(gameMap, snake, direction)
     if status != '平安':
       break
-  print('游戏结束，原因：', status)  
+  print('游戏结束，原因：', status)
+  time.sleep(3)
 
 main()
